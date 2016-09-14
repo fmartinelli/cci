@@ -120,53 +120,52 @@ namespace Microsoft.Cci.ILToCodeModel
             var assignment = new Assignment()
             {
                 Source = pushStatement.ValueToPush,
-                Target = new TargetExpression(){ Definition = local, Instance = null, Type = t, },
+                Target = new TargetExpression() { Definition = local, Instance = null, Type = t, },
                 Type = t,
             };
-            if (this.inThenBranch)
+
+            // We are only interested in fixing int/bool mismatches
+            if (this.thenBranchPushes != null && (t.TypeCode == PrimitiveTypeCode.Int32 || t.TypeCode == PrimitiveTypeCode.Boolean))
             {
-                if (this.thenBranchPushes != null && (t.TypeCode == PrimitiveTypeCode.Int32 || t.TypeCode == PrimitiveTypeCode.Boolean))
+                if (this.inThenBranch)
                 {
+                    // Register the unseen variable
                     this.thenBranchPushes.Add(depth, assignment);
                 }
-            }
-            else if (this.inElseBranch)
-            {
-                if (this.thenBranchPushes != null)
+                else if (this.inElseBranch)
                 {
-                    if (t.TypeCode == PrimitiveTypeCode.Int32)
+                    // We need to compare if the variable, which should have been already registered by the then branch, has the same type
+                    Contract.Assume(this.thenBranchPushes.ContainsKey(depth));
+                    var a = this.thenBranchPushes[depth];
+                    if (t.TypeCode != a.Type.TypeCode)
                     {
-                        Contract.Assume(this.thenBranchPushes.ContainsKey(depth));
-                        var a = this.thenBranchPushes[depth];
                         if (a.Type.TypeCode == PrimitiveTypeCode.Boolean)
                         {
+                            // The variable was registered with type Bool
                             // then this should be a push of a boolean, not an int
                             Contract.Assume(pushStatement.ValueToPush is ICompileTimeConstant);
-                            var ctc = (ICompileTimeConstant) pushStatement.ValueToPush;
+                            var ctc = (ICompileTimeConstant)pushStatement.ValueToPush;
                             var boolLocal = a.Target.Definition as ILocalDefinition;
                             assignment.Target = new TargetExpression() { Definition = boolLocal, Instance = null, Type = this.systemBool, };
-                            assignment.Source = new CompileTimeConstant() { Type = this.systemBool, Value = ((int)ctc.Value) == 0 ? false : true, };
+                            assignment.Source = new CompileTimeConstant() { Type = this.systemBool, Value = (int)ctc.Value != 0, };
                             this.locals.Pop();
                             this.locals.Push(boolLocal);
                         }
-                    }
-                    else if (t.TypeCode == PrimitiveTypeCode.Boolean)
-                    {
-                        Contract.Assume(this.thenBranchPushes.ContainsKey(depth));
-                        var a = this.thenBranchPushes[depth];
-                        if (a.Type.TypeCode == PrimitiveTypeCode.Int32)
+                        else if (a.Type.TypeCode == PrimitiveTypeCode.Int32)
                         {
-                            // then this should have been a push of a boolean, not an int
+                            // The variable was registered with type Int, but now we know
+                            // that it should have been a push of a boolean, not an int
                             Contract.Assume(a.Source is ICompileTimeConstant);
                             var ctc = (ICompileTimeConstant)a.Source;
                             var boolLocal = a.Target.Definition as ILocalDefinition;
                             Contract.Assume(boolLocal != null);
                             a.Target = new TargetExpression() { Definition = boolLocal, Instance = null, Type = this.systemBool, };
-                            a.Source = new CompileTimeConstant() { Type = this.systemBool, Value = ((int)ctc.Value) == 0 ? false : true, };
+                            a.Source = new CompileTimeConstant() { Type = this.systemBool, Value = (int)ctc.Value != 0 };
                         }
                     }
                 }
             }
+
             var expressionStatment = new ExpressionStatement()
             {
                 Expression = assignment,
@@ -225,7 +224,7 @@ namespace Microsoft.Cci.ILToCodeModel
             this.inElseBranch = true;
             conditionalStatement.FalseBranch = this.Rewrite(conditionalStatement.FalseBranch);
 
-            Contract.Assume(stackAfterTrue.Count == this.locals.Count);
+            //Contract.Assume(stackAfterTrue.Count == this.locals.Count);
             // and that the things pushed in both branches are type-compatible
             // (one branch might push a bool and the other an int)
 

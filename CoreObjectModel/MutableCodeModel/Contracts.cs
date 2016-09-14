@@ -125,7 +125,7 @@ namespace Microsoft.Cci.MutableContracts {
     /// Returns the loop contract, if any, that has been associated with the given object. Returns null if no association exits.
     /// </summary>
     /// <param name="loop">An object that might have been associated with a loop contract. This can be any kind of object.</param>
-    public ILoopContract/*?*/ GetLoopContractFor(object loop) {
+    public virtual ILoopContract/*?*/ GetLoopContractFor(object loop) {
       lock (this.loopContractFor) {
         ILoopContract/*?*/ result;
         if (this.loopContractFor.TryGetValue(loop, out result)) {
@@ -140,7 +140,8 @@ namespace Microsoft.Cci.MutableContracts {
     /// Returns the method contract, if any, that has been associated with the given object. Returns null if no association exits.
     /// </summary>
     /// <param name="method">An object that might have been associated with a method contract. This can be any kind of object.</param>
-    public IMethodContract/*?*/ GetMethodContractFor(object method) {
+    public virtual IMethodContract/*?*/ GetMethodContractFor(object method)
+    {
       lock (this.methodContractFor) {
         IMethodContract/*?*/ result;
         if (this.methodContractFor.TryGetValue(method, out result)) {
@@ -155,7 +156,8 @@ namespace Microsoft.Cci.MutableContracts {
     /// Returns the triggers, if any, that have been associated with the given object. Returns null if no association exits.
     /// </summary>
     /// <param name="quantifier">An object that might have been associated with triggers. This can be any kind of object.</param>
-    public IEnumerable<IEnumerable<IExpression>>/*?*/ GetTriggersFor(object quantifier) {
+    public virtual IEnumerable<IEnumerable<IExpression>>/*?*/ GetTriggersFor(object quantifier)
+    {
       lock (this.triggersFor) {
         IEnumerable<IEnumerable<IExpression>>/*?*/ result;
         if (this.triggersFor.TryGetValue(quantifier, out result)) {
@@ -170,7 +172,8 @@ namespace Microsoft.Cci.MutableContracts {
     /// Returns the type contract, if any, that has been associated with the given object. Returns null if no association exits.
     /// </summary>
     /// <param name="type">An object that might have been associated with a type contract. This can be any kind of object.</param>
-    public ITypeContract/*?*/ GetTypeContractFor(object type) {
+    public virtual ITypeContract/*?*/ GetTypeContractFor(object type)
+    {
       lock (this.typeContractFor) {
         ITypeContract/*?*/ result;
         if (this.typeContractFor.TryGetValue(type, out result)) {
