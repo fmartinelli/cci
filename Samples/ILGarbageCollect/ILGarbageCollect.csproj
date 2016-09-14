@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{60CD0C85-1E4A-4068-A4EC-D15B7981A908}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ILGarbageCollect</RootNamespace>
+    <AssemblyName>ILGarbageCollect</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ILGarbageCollect.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnalysisReasons.cs" />
+    <Compile Include="GarbageCollectHelper.cs" />
+    <Compile Include="Instrumentation\ILMethodBodyRewriter.cs" />
+    <Compile Include="Instrumentation\ZombieFieldInstrumentor.cs" />
+    <Compile Include="LocalFlow.cs" />
+    <Compile Include="Mark.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RapidTypeAnalysis.cs" />
+    <Compile Include="Summaries\LocalFlowMethodSummarizer.cs" />
+    <Compile Include="Summaries\SimpleBytecodeMethodSummarizer.cs" />
+    <Compile Include="Summaries\Summaries.cs" />
+    <Compile Include="Summaries\TextFileMethodSummarizer.cs" />
+    <Compile Include="Sweep.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CodeGenerators\ControlAndDataFlowGraph\ControlAndDataFlowGraph.csproj">
+      <Project>{2596efb0-87ae-42ce-89eb-84f35d6350d2}</Project>
+      <Name>ControlAndDataFlowGraph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Converters\ILGenerator\ILGenerator.csproj">
+      <Project>{08156c78-403a-4112-ad81-8646ac51cd2f}</Project>
+      <Name>ILGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreObjectModel\MetadataHelper\MetadataHelper.csproj">
+      <Project>{4a34a3c5-6176-49d7-a4c5-b2b671247f8f}</Project>
+      <Name>MetadataHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreObjectModel\MetadataModel\MetadataModel.csproj">
+      <Project>{33cab640-0d03-43df-81bd-22cdc6c0a597}</Project>
+      <Name>MetadataModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreObjectModel\MutableMetadataModel\MutableMetadataModel.csproj">
+      <Project>{319e151c-8f33-49e7-81c9-30f02f9ba90a}</Project>
+      <Name>MutableMetadataModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreObjectModel\SourceModel\SourceModel.csproj">
+      <Project>{4b0054fd-124a-4037-9965-bdb55e6bf389}</Project>
+      <Name>SourceModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PDBReaderAndWriter\PdbReader\PdbReader.csproj">
+      <Project>{a6a31b03-7c3d-4de6-aa73-be88116bc40a}</Project>
+      <Name>PdbReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PDBReaderAndWriter\PdbWriter\PdbWriter.csproj">
+      <Project>{6d83f687-abb5-40b3-915e-ca53da0eb7f3}</Project>
+      <Name>PdbWriter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PEReaderAndWriter\PEReader\PeReader.csproj">
+      <Project>{34b9a0ce-df18-4cbc-8f7a-90c2b74338d5}</Project>
+      <Name>PeReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PEReaderAndWriter\PEWriter\PeWriter.csproj">
+      <Project>{304a8b0b-851b-4aa6-a17d-5f87f39c5e5c}</Project>
+      <Name>PeWriter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
