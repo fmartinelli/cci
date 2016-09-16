@@ -117,9 +117,11 @@ namespace Microsoft.Cci.ILToCodeModel
             var t = pushStatement.ValueToPush.Type;
             var local = this.GetOrCreateLocal(depth, t);
             this.locals.Push(local);
+            var rewritedValueToPush = Rewrite(pushStatement.ValueToPush);
+
             var assignment = new Assignment()
             {
-                Source = pushStatement.ValueToPush,
+                Source = rewritedValueToPush,
                 Target = new TargetExpression() { Definition = local, Instance = null, Type = t, },
                 Type = t,
             };
@@ -134,10 +136,11 @@ namespace Microsoft.Cci.ILToCodeModel
                 }
                 else if (this.inElseBranch)
                 {
-                    // We need to compare if the variable, which should have been already registered by the then branch, has the same type
-                    Contract.Assume(this.thenBranchPushes.ContainsKey(depth));
-                    var a = this.thenBranchPushes[depth];
-                    if (t.TypeCode != a.Type.TypeCode)
+                    Assignment a = null;
+                    if(this.thenBranchPushes.ContainsKey(depth)){
+                        a = this.thenBranchPushes[depth];
+                    }
+                    if (a != null && t.TypeCode != a.Type.TypeCode)
                     {
                         if (a.Type.TypeCode == PrimitiveTypeCode.Boolean)
                         {
