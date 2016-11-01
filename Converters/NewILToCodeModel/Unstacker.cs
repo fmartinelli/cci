@@ -220,7 +220,7 @@ namespace Microsoft.Cci.ILToCodeModel
 
             var savedStack = Copy(this.locals);
             conditionalStatement.TrueBranch = this.Rewrite(conditionalStatement.TrueBranch);
-            var stackAfterTrue = Copy(this.locals);
+            var stackAfterTrue = Copy(this.locals).ToArray();
 
             this.locals = Copy(savedStack);
             this.inThenBranch = false;
@@ -236,6 +236,35 @@ namespace Microsoft.Cci.ILToCodeModel
             // currently it is important that it is the one from the else-branch
             // because of the fixup code in Rewrite(IPushStatement) that deals
             // with the bool/int confusion
+
+            var stackAfterFalse = Copy(this.locals).ToArray();
+
+            if (stackAfterTrue.Length == stackAfterFalse.Length && stackAfterTrue.Length > 0)
+            {
+                for (var i = 0; i < stackAfterTrue.Length; ++i)
+                {
+                    var trueVar = stackAfterTrue[i];
+                    var falseVar = stackAfterFalse[i];
+
+                    if (falseVar.Type.TypeCode == PrimitiveTypeCode.Boolean &&
+                        trueVar.Type.TypeCode != PrimitiveTypeCode.Boolean)
+                    {
+                        foreach (var assign in this.thenBranchPushes.Values)
+                        {
+                            if (assign.Target.Definition == trueVar)
+                            {
+                                var target = assign.Target as TargetExpression;
+                                target.Definition = falseVar;
+                                target.Type = falseVar.Type;
+
+                                var source = assign.Source as CompileTimeConstant;
+                                source.Value = (int)source.Value != 0;
+                                source.Type = falseVar.Type;
+                            }
+                        }
+                    }
+                }
+            }
 
             this.inThenBranch = savedInThenBranch;
             this.inElseBranch = savedInElseBranch;
