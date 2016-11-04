@@ -113,11 +113,12 @@ namespace Microsoft.Cci.ILToCodeModel
 
         public override IStatement Rewrite(IPushStatement pushStatement)
         {
+            var rewritedValueToPush = Rewrite(pushStatement.ValueToPush);
             var depth = this.locals.Count;
             var t = pushStatement.ValueToPush.Type;
             var local = this.GetOrCreateLocal(depth, t);
             this.locals.Push(local);
-            var rewritedValueToPush = Rewrite(pushStatement.ValueToPush);
+            
 
             var assignment = new Assignment()
             {
@@ -227,7 +228,7 @@ namespace Microsoft.Cci.ILToCodeModel
             this.inElseBranch = true;
             conditionalStatement.FalseBranch = this.Rewrite(conditionalStatement.FalseBranch);
 
-            //Contract.Assume(stackAfterTrue.Count == this.locals.Count);
+            //Contract.Assume(stackAfterTrue.Length == this.locals.Count);
             // and that the things pushed in both branches are type-compatible
             // (one branch might push a bool and the other an int)
 
@@ -258,8 +259,11 @@ namespace Microsoft.Cci.ILToCodeModel
                                 target.Type = falseVar.Type;
 
                                 var source = assign.Source as CompileTimeConstant;
-                                source.Value = (int)source.Value != 0;
-                                source.Type = falseVar.Type;
+                                if (source.Value is int)
+                                {
+                                    source.Value = (int)source.Value != 0;
+                                    source.Type = falseVar.Type;
+                                }
                             }
                         }
                     }
