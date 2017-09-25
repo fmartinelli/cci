@@ -170,7 +170,7 @@ namespace Microsoft.Cci.ILToCodeModel {
       if (handler1.TryEndOffset > handler2.TryEndOffset) return -1;
       if (handler1.TryEndOffset < handler2.TryEndOffset) return 1;
       if (handler1.HandlerStartOffset < handler2.HandlerStartOffset) return -1;
-      if (handler2.HandlerStartOffset > handler2.HandlerStartOffset) return 1;
+      if (handler1.HandlerStartOffset > handler2.HandlerStartOffset) return 1;
       if (handler1.HandlerEndOffset > handler2.HandlerEndOffset) return -1;
       if (handler1.HandlerEndOffset < handler2.HandlerEndOffset) return 1;
       return 0;
